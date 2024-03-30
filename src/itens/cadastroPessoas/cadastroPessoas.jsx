@@ -5,6 +5,23 @@ function CadastroPessoas() {
   const [casado, setCasado] = useState(false);
   const [pessoasCadastradas, setPessoasCadastradas] = useState([]);
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const csv = e.target.result;
+      const lines = csv.split('\n');
+      const newPeople = lines.map((line) => {
+        const [nome, idade, filhos, telefone, nomeConjuge] = line.split(',');
+        return { nome, idade, filhos, telefone, nomeConjuge };
+      });
+      setPessoasCadastradas([...pessoasCadastradas, ...newPeople]);
+    };
+
+    reader.readAsText(file);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const nome = event.target.nome.value;
@@ -18,27 +35,35 @@ function CadastroPessoas() {
     event.target.reset();
   };
 
-const downloadCSV = () => {
+  const handleRemove = (index) => {
+    const updatedList = pessoasCadastradas.filter((_, i) => i !== index);
+    setPessoasCadastradas(updatedList);
+  };
 
-  const csvHeader = 'nome,idade,filhos,telefone,conjuge';
+  const downloadCSV = () => {
+    const csvHeader = 'nome,idade,filhos,telefone,nomeConjuge';
+    const csvRows = pessoasCadastradas.map((pessoa) =>
+      Object.values(pessoa).join(',')
+    );
+    const csvContent = csvHeader + '\n' + csvRows.join('\n');
+    const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'pessoas_cadastradas.csv');
+    document.body.appendChild(link);
+    link.click();
+  };
 
-
-  const csvRows = pessoasCadastradas.map((pessoa) =>
-    Object.values(pessoa).join(',')
-  );
-
-  const csvContent = csvHeader + '\n' + csvRows.join('\n');
-
-  const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
-  const link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'pessoas_cadastradas.csv');
-
-  document.body.appendChild(link);
-  link.click();
-};
   return (
     <div>
+      <input
+        type='file'
+        id='uploadFile'
+        onChange={handleFileUpload}
+        accept='.csv'
+        name='uploadFile'
+      />
+
       <form id='formPessoa' onSubmit={handleSubmit}>
         <div className='cad_pessoas'>
           <label htmlFor='nome'>Nome completo:</label>
@@ -112,6 +137,7 @@ const downloadCSV = () => {
               <th>Filhos</th>
               <th>Telefone</th>
               <th>Cônjuge</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -122,6 +148,9 @@ const downloadCSV = () => {
                 <td>{pessoa.filhos}</td>
                 <td>{pessoa.telefone}</td>
                 <td>{pessoa.nomeConjuge}</td>
+                <td>
+                  <button onClick={() => handleRemove(index)}>Remover</button>
+                </td>
               </tr>
             ))}
           </tbody>
