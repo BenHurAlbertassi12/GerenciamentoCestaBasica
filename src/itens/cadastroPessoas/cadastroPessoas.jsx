@@ -11,7 +11,7 @@ function CadastroPessoas() {
 
     reader.onload = (e) => {
       const csv = e.target.result;
-      const lines = csv.split('\n');
+      const lines = csv.split('\n').slice(1);
       const newPeople = lines.map((line) => {
         const [nome, idade, filhos, telefone, nomeConjuge] = line.split(',');
         return { nome, idade, filhos, telefone, nomeConjuge };
@@ -24,10 +24,14 @@ function CadastroPessoas() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const nome = event.target.nome.value;
+    const nome = event.target.nome.value.trim();
     const idade = event.target.idade.value;
     const filhos = event.target.filhos.value;
-    const telefone = event.target.telefone.value;
+    let telefone = event.target.telefone.value.replace(/\D/g, '');
+    if (telefone.length !== 11) {
+      alert('O telefone deve conter exatamente 11 dígitos.');
+      return;
+    }
     const nomeConjuge = casado ? event.target.nomeConjuge.value : '';
 
     const pessoa = { nome, idade, filhos, telefone, nomeConjuge };
@@ -41,11 +45,10 @@ function CadastroPessoas() {
   };
 
   const downloadCSV = () => {
-    const csvHeader = 'nome,idade,filhos,telefone,nomeConjuge';
     const csvRows = pessoasCadastradas.map((pessoa) =>
       Object.values(pessoa).join(',')
     );
-    const csvContent = csvHeader + '\n' + csvRows.join('\n');
+    const csvContent = csvRows.join('\n');
     const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -56,13 +59,16 @@ function CadastroPessoas() {
 
   return (
     <div>
-      <input
-        type='file'
-        id='uploadFile'
-        onChange={handleFileUpload}
-        accept='.csv'
-        name='uploadFile'
-      />
+      <div className='distancia'>
+        <input
+          type='file'
+          id='uploadFile'
+          onChange={handleFileUpload}
+          accept='.csv'
+          name='uploadFile'
+          tite
+        />
+      </div>
 
       <form id='formPessoa' onSubmit={handleSubmit}>
         <div className='cad_pessoas'>
@@ -71,6 +77,8 @@ function CadastroPessoas() {
             type='text'
             id='nome'
             name='nome'
+            pattern='[A-Za-z\s]+'
+            title='O nome deve conter apenas letras'
             placeholder='Digite o nome completo'
             required
           />
