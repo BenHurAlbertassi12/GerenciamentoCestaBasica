@@ -13,7 +13,7 @@ function CadastroPessoas() {
 
     reader.onload = (e) => {
       const csv = e.target.result;
-      const lines = csv.split('\n').slice(1); // Ignora a primeira linha (cabeçalho)
+      const lines = csv.split('\n').slice(1); 
       const newPeople = lines.map((line) => {
         const [nome, idade, filhos, telefone, nomeConjuge] = line.split(',');
         return { nome, idade, filhos, telefone, nomeConjuge };
@@ -26,8 +26,8 @@ function CadastroPessoas() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const nome = event.target.nome.value.trim(); // Remove espaços em branco antes e depois
-    const telefone = event.target.telefone.value.replace(/\D/g, ''); // Remove não dígitos
+    const nome = event.target.nome.value.trim();
+    const telefone = event.target.telefone.value.replace(/\D/g, ''); 
     if (!nome.match(/^[A-Za-z\s]+$/)) {
       setNomeValido(false);
       return;
