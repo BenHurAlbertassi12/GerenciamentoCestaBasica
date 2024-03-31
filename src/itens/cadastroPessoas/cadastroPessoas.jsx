@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../App.css';
 
 function CadastroPessoas() {
@@ -67,6 +67,20 @@ function CadastroPessoas() {
     document.body.appendChild(link);
     link.click();
   };
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('pessoasCadastradas');
+    if (savedData) {
+      setPessoasCadastradas(JSON.parse(savedData));
+    }
+  }, []);
+
+    useEffect(() => {
+      localStorage.setItem(
+        'pessoasCadastradas',
+        JSON.stringify(pessoasCadastradas)
+      );
+    }, [pessoasCadastradas]);
 
   return (
     <div>
