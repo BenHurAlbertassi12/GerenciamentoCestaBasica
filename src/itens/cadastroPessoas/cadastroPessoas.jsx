@@ -4,6 +4,8 @@ import '../../App.css';
 function CadastroPessoas() {
   const [casado, setCasado] = useState(false);
   const [pessoasCadastradas, setPessoasCadastradas] = useState([]);
+  const [nomeValido, setNomeValido] = useState(true);
+  const [telefoneValido, setTelefoneValido] = useState(true);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -11,7 +13,7 @@ function CadastroPessoas() {
 
     reader.onload = (e) => {
       const csv = e.target.result;
-      const lines = csv.split('\n').slice(1);
+      const lines = csv.split('\n').slice(1); // Ignora a primeira linha (cabeçalho)
       const newPeople = lines.map((line) => {
         const [nome, idade, filhos, telefone, nomeConjuge] = line.split(',');
         return { nome, idade, filhos, telefone, nomeConjuge };
@@ -24,14 +26,23 @@ function CadastroPessoas() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const nome = event.target.nome.value.trim();
+    const nome = event.target.nome.value.trim(); // Remove espaços em branco antes e depois
+    const telefone = event.target.telefone.value.replace(/\D/g, ''); // Remove não dígitos
+    if (!nome.match(/^[A-Za-z\s]+$/)) {
+      setNomeValido(false);
+      return;
+    } else {
+      setNomeValido(true);
+    }
+    if (telefone.length !== 11) {
+      setTelefoneValido(false);
+      return;
+    } else {
+      setTelefoneValido(true);
+    }
+
     const idade = event.target.idade.value;
     const filhos = event.target.filhos.value;
-    let telefone = event.target.telefone.value.replace(/\D/g, '');
-    if (telefone.length !== 11) {
-      alert('O telefone deve conter exatamente 11 dígitos.');
-      return;
-    }
     const nomeConjuge = casado ? event.target.nomeConjuge.value : '';
 
     const pessoa = { nome, idade, filhos, telefone, nomeConjuge };
@@ -81,7 +92,11 @@ function CadastroPessoas() {
             title='O nome deve conter apenas letras'
             placeholder='Digite o nome completo'
             required
+            className={!nomeValido ? 'invalido' : ''}
           />
+          {!nomeValido && (
+            <p className='erro'>O nome deve conter apenas letras.</p>
+          )}
 
           <label htmlFor='idade'>Idade:</label>
           <input
@@ -108,7 +123,21 @@ function CadastroPessoas() {
             name='telefone'
             placeholder='Digite o telefone'
             required
+            onChange={(e) => {
+              const telefone = e.target.value.replace(/\D/g, '');
+              if (telefone.length !== 11) {
+                setTelefoneValido(false);
+              } else {
+                setTelefoneValido(true);
+              }
+            }}
+            className={!telefoneValido ? 'invalido' : ''}
           />
+          {!telefoneValido && (
+            <p className='erro'>
+              O telefone deve conter exatamente 11 dígitos.
+            </p>
+          )}
           <br />
           <div>
             <label htmlFor='casado'>Casado(a):</label>
