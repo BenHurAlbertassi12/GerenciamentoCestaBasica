@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
-import CadastroPessoas from './itens/cadastroPessoas/cadastroPessoas';
+// import CadastroPessoas from './itens/cadastroPessoas/cadastroPessoas';
+import CadastroCesta from './itens/cadastroCesta/cadastroCesta';
+
 
 function App() {
   return (
@@ -12,15 +14,16 @@ function App() {
       <section>
       
           <h3>Cadastro Beneficiários</h3>
-          <CadastroPessoas />
+          {/* <CadastroPessoas /> */}
         
 
       
-          <h3>Cadastro Itens</h3>
+        <h3>Cadastro Itens</h3>
+        <CadastroCesta />
           <p>Resultado Cesta Básica</p>
         
       
-          <h3>Itens Csta Básica</h3>
+          <h3>Itens Cesta Básica</h3>
         
       </section>
     </div>
