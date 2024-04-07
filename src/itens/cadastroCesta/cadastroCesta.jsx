@@ -42,37 +42,89 @@ function CadastroCesta() {
   };
 
   const handleCreateCestas = () => {
-    // Conta os itens presentes na cesta básica
-    const itemsInCesta = {};
-    items.forEach((item) => {
-      itemsInCesta[item.name] = item.quantity;
-    });
-
-    // Verifica a quantidade de cestas básicas possíveis
+    // Calcula a quantidade de cestas possíveis
     let totalCestas = Infinity;
     desiredItems.forEach((item) => {
-      if (itemsInCesta[item.name]) {
-        const cestasPossible = Math.floor(
-          itemsInCesta[item.name] / item.quantity
+      const itemInList = items.find((listItem) => listItem.name === item.name);
+      if (itemInList) {
+        totalCestas = Math.min(
+          totalCestas,
+          Math.floor(itemInList.quantity / item.quantity)
         );
-        totalCestas = Math.min(totalCestas, cestasPossible);
       }
     });
     setBasketsMade(totalCestas);
 
-    // Calcula os itens excedentes
+    // Calcula a quantidade de itens restantes
     const remaining = [];
-    desiredItems.forEach((item) => {
-      if (itemsInCesta[item.name]) {
+    items.forEach((item) => {
+      const desiredItem = desiredItems.find(
+        (desired) => desired.name === item.name
+      );
+      if (desiredItem) {
         const remainingQuantity =
-          itemsInCesta[item.name] - item.quantity * totalCestas;
+          item.quantity - desiredItem.quantity * totalCestas;
         if (remainingQuantity > 0) {
-          remaining.push({ name: item.name, quantity: remainingQuantity });
+          remaining.push({ ...item, remainingQuantity });
         }
       }
     });
     setRemainingItems(remaining);
   };
+
+  const downloadCSV = () => {
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      items.map((e) => Object.values(e).join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'items.csv');
+    document.body.appendChild(link);
+    link.click();
+  };
+
+  const handleFileNovosItens = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split('\n').slice(1);
+      const newItems = lines.map((line) => {
+        const [name, quantity, weight] = line.split(',');
+        return { name, quantity, weight };
+      });
+      setItems(newItems);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleFileCesta = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split('\n').slice(1);
+      const newItems = lines.map((line) => {
+        const [name, quantity, weight] = line.split(',');
+        return { name, quantity, weight };
+      });
+      setDesiredItems(newItems);
+    };
+    reader.readAsText(file);
+    };
+    
+      const handleRemove = (index, listType) => {
+        if (listType === 'items') {
+          const updatedItems = [...items];
+          updatedItems.splice(index, 1);
+          setItems(updatedItems);
+        } else if (listType === 'desiredItems') {
+          const updatedDesiredItems = [...desiredItems];
+          updatedDesiredItems.splice(index, 1);
+          setDesiredItems(updatedDesiredItems);
+        }
+      };
 
   return (
     <div>
@@ -112,10 +164,14 @@ function CadastroCesta() {
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.weight}</td>
+                <button onClick={() => handleRemove(index, 'items')}>
+                  Remover
+                </button>
               </tr>
             ))}
           </tbody>
         </table>
+        <input type='file' accept='.csv' onChange={handleFileNovosItens} />
       </section>
       <section>
         <h4>Lista de Itens da Cesta Básica</h4>
@@ -153,28 +209,26 @@ function CadastroCesta() {
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.weight}</td>
+                <button onClick={() => handleRemove(index, 'desiredItems')}>
+                  Remover
+                </button>
               </tr>
             ))}
           </tbody>
         </table>
+        <input type='file' accept='.csv' onChange={handleFileCesta} />
       </section>
       <section>
         <h4>Relatório Final</h4>
         <p>{basketsMade} cestas básicas prontas</p>
-        {remainingItems.length > 0 && (
-          <div>
-            <p>Itens excedentes:</p>
-            <ul>
-              {remainingItems.map((item, index) => (
-                <li key={index}>
-                  {item.quantity} {item.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {remainingItems.map((item, index) => (
+          <p key={index}>
+            {item.remainingQuantity} {item.name}(s) excedente(s)
+          </p>
+        ))}
       </section>
       <button onClick={handleCreateCestas}>Calcular Cestas</button>
+      <button onClick={downloadCSV}>Baixar Itens em CSV</button>
     </div>
   );
 }
