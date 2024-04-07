@@ -42,69 +42,38 @@ function CadastroCesta() {
   };
 
   const handleCreateCestas = () => {
-    // Calcula a quantidade de cestas possíveis
-    let totalCestas = 0;
+    // Conta os itens presentes na cesta básica
+    const itemsInCesta = {};
     items.forEach((item) => {
-      totalCestas = Math.min(
-        totalCestas === 0 ? Infinity : totalCestas,
-        Math.floor(item.quantity / 1) // considera apenas 1 kg de cada item por cesta
-      );
+      itemsInCesta[item.name] = item.quantity;
+    });
+
+    // Verifica a quantidade de cestas básicas possíveis
+    let totalCestas = Infinity;
+    desiredItems.forEach((item) => {
+      if (itemsInCesta[item.name]) {
+        const cestasPossible = Math.floor(
+          itemsInCesta[item.name] / item.quantity
+        );
+        totalCestas = Math.min(totalCestas, cestasPossible);
+      }
     });
     setBasketsMade(totalCestas);
 
-    // Calcula a quantidade de itens restantes
+    // Calcula os itens excedentes
     const remaining = [];
-    items.forEach((item) => {
-      const remainingQuantity = item.quantity - totalCestas;
-      if (remainingQuantity > 0) {
-        remaining.push({ ...item, remainingQuantity });
+    desiredItems.forEach((item) => {
+      if (itemsInCesta[item.name]) {
+        const remainingQuantity =
+          itemsInCesta[item.name] - item.quantity * totalCestas;
+        if (remainingQuantity > 0) {
+          remaining.push({ name: item.name, quantity: remainingQuantity });
+        }
       }
     });
     setRemainingItems(remaining);
   };
 
-  const downloadCSV = () => {
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      items.map((e) => Object.values(e).join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'items.csv');
-    document.body.appendChild(link);
-    link.click();
-  };
-
-  const handleFileNovosItens = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target.result;
-      const lines = text.split('\n');
-      const newItems = lines.map((line) => {
-        const [name, quantity, weight] = line.split(',');
-        return { name, quantity, weight };
-      });
-      setItems(newItems);
-    };
-    reader.readAsText(file);
-  };
-
-      const handleFileCesta = (event) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const text = e.target.result;
-          const lines = text.split('\n');
-          const newItems = lines.map((line) => {
-            const [name, quantity, weight] = line.split(',');
-            return { name, quantity, weight };
-          });
-          setItems(newItems);
-        };
-        reader.readAsText(file);
-      };
-    
   return (
     <div>
       <section>
@@ -147,75 +116,65 @@ function CadastroCesta() {
             ))}
           </tbody>
         </table>
-        <input type='file' accept='.csv' onChange={handleFileNovosItens} />
       </section>
-      
-        <section>
-          <h4>Lista de Itens da Cesta Básica</h4>
-          <input
-            type='text'
-            placeholder='Nome do Item'
-            value={itemNameSecond}
-            onChange={(e) => setItemNameSecond(e.target.value)}
-          />
-          <input
-            type='text'
-            placeholder='Quantidade'
-            value={itemQuantitySecond}
-            onChange={(e) => setItemQuantitySecond(e.target.value)}
-          />
-          <input
-            type='text'
-            placeholder='Peso (kg)'
-            value={itemWeightSecond}
-            onChange={(e) => setItemWeightSecond(e.target.value)}
-          />
-          <button onClick={handleAddItemSecond}>Adicionar Item</button>
+      <section>
+        <h4>Lista de Itens da Cesta Básica</h4>
+        <input
+          type='text'
+          placeholder='Nome do Item'
+          value={itemNameSecond}
+          onChange={(e) => setItemNameSecond(e.target.value)}
+        />
+        <input
+          type='text'
+          placeholder='Quantidade'
+          value={itemQuantitySecond}
+          onChange={(e) => setItemQuantitySecond(e.target.value)}
+        />
+        <input
+          type='text'
+          placeholder='Peso (kg)'
+          value={itemWeightSecond}
+          onChange={(e) => setItemWeightSecond(e.target.value)}
+        />
+        <button onClick={handleAddItemSecond}>Adicionar Item</button>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Quantidade</th>
-                <th>Peso (kg)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {desiredItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.weight}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <input type='file' accept='.csv' onChange={handleFileCesta} />
-        </section>
-
-      <h4>Itens da Cesta</h4>
-      <p>{basketsMade}</p>
-
-      <h4>Quantidade de Itens que Faltam</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Quantidade Restante</th>
-          </tr>
-        </thead>
-        <tbody>
-          {remainingItems.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>{item.remainingQuantity}</td>
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Quantidade</th>
+              <th>Peso (kg)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {desiredItems.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+                <td>{item.weight}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h4>Relatório Final</h4>
+        <p>{basketsMade} cestas básicas prontas</p>
+        {remainingItems.length > 0 && (
+          <div>
+            <p>Itens excedentes:</p>
+            <ul>
+              {remainingItems.map((item, index) => (
+                <li key={index}>
+                  {item.quantity} {item.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
       <button onClick={handleCreateCestas}>Calcular Cestas</button>
-      <button onClick={downloadCSV}>Baixar Itens em CSV</button>
     </div>
   );
 }
