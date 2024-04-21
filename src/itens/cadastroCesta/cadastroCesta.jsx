@@ -42,7 +42,6 @@ function CadastroCesta() {
   };
 
   const handleCreateCestas = () => {
-    // Calcula a quantidade de cestas possíveis
     let totalCestas = Infinity;
     desiredItems.forEach((item) => {
       const itemInList = items.find((listItem) => listItem.name === item.name);
@@ -53,9 +52,16 @@ function CadastroCesta() {
         );
       }
     });
+
+    if (totalCestas === Infinity) {
+      setBasketsMade(0);
+      setRemainingItems([]);
+      alert('Não é possível montar nenhuma cesta com os itens fornecidos.');
+      return;
+    }
+
     setBasketsMade(totalCestas);
 
-    // Calcula a quantidade de itens restantes
     const remaining = [];
     items.forEach((item) => {
       const desiredItem = desiredItems.find(
@@ -69,6 +75,16 @@ function CadastroCesta() {
         }
       }
     });
+
+    if (remaining.length === 0) {
+      setRemainingItems([]);
+      return;
+    }
+
+    const remainingText = remaining
+      .map((item) => `${item.remainingQuantity} ${item.name}(s)`)
+      .join(', ');
+    alert(`Faltam ${remainingText} para a próxima cesta.`);
     setRemainingItems(remaining);
   };
 
@@ -112,19 +128,19 @@ function CadastroCesta() {
       setDesiredItems(newItems);
     };
     reader.readAsText(file);
-    };
-    
-      const handleRemove = (index, listType) => {
-        if (listType === 'items') {
-          const updatedItems = [...items];
-          updatedItems.splice(index, 1);
-          setItems(updatedItems);
-        } else if (listType === 'desiredItems') {
-          const updatedDesiredItems = [...desiredItems];
-          updatedDesiredItems.splice(index, 1);
-          setDesiredItems(updatedDesiredItems);
-        }
-      };
+  };
+
+  const handleRemove = (index, listType) => {
+    if (listType === 'items') {
+      const updatedItems = [...items];
+      updatedItems.splice(index, 1);
+      setItems(updatedItems);
+    } else if (listType === 'desiredItems') {
+      const updatedDesiredItems = [...desiredItems];
+      updatedDesiredItems.splice(index, 1);
+      setDesiredItems(updatedDesiredItems);
+    }
+  };
 
   return (
     <div>
@@ -149,6 +165,8 @@ function CadastroCesta() {
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
+              <th>Peso</th>
+              <th>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -157,9 +175,11 @@ function CadastroCesta() {
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.weight}</td>
-                <button onClick={() => handleRemove(index, 'items')}>
-                  Remover
-                </button>
+                <td>
+                  <button onClick={() => handleRemove(index, 'items')}>
+                    Remover
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -186,6 +206,8 @@ function CadastroCesta() {
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
+              <th>Peso</th>
+              <th>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -194,9 +216,11 @@ function CadastroCesta() {
                 <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.weight}</td>
-                <button onClick={() => handleRemove(index, 'desiredItems')}>
-                  Remover
-                </button>
+                <td>
+                  <button onClick={() => handleRemove(index, 'desiredItems')}>
+                    Remover
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
