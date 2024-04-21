@@ -142,12 +142,6 @@ function CadastroCesta() {
           value={itemQuantityFirst}
           onChange={(e) => setItemQuantityFirst(e.target.value)}
         />
-        <input
-          type='text'
-          placeholder='Peso (kg)'
-          value={itemWeightFirst}
-          onChange={(e) => setItemWeightFirst(e.target.value)}
-        />
         <button onClick={handleAddItemFirst}>Adicionar Item</button>
 
         <table>
@@ -155,7 +149,6 @@ function CadastroCesta() {
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
-              <th>Peso (kg)</th>
             </tr>
           </thead>
           <tbody>
@@ -187,20 +180,12 @@ function CadastroCesta() {
           value={itemQuantitySecond}
           onChange={(e) => setItemQuantitySecond(e.target.value)}
         />
-        <input
-          type='text'
-          placeholder='Peso (kg)'
-          value={itemWeightSecond}
-          onChange={(e) => setItemWeightSecond(e.target.value)}
-        />
         <button onClick={handleAddItemSecond}>Adicionar Item</button>
-
         <table>
           <thead>
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
-              <th>Peso (kg)</th>
             </tr>
           </thead>
           <tbody>
