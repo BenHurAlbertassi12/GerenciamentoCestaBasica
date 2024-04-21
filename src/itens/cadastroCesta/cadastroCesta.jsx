@@ -6,6 +6,7 @@ function CadastroCesta() {
   const [desiredItems, setDesiredItems] = useState([]);
   const [basketsMade, setBasketsMade] = useState(0);
   const [remainingItems, setRemainingItems] = useState([]);
+  const [missingItems, setMissingItems] = useState([]);
 
   // Estados para os inputs do primeiro conjunto
   const [itemNameFirst, setItemNameFirst] = useState('');
@@ -20,10 +21,19 @@ function CadastroCesta() {
   const handleAddItemFirst = () => {
     const newItem = {
       name: itemNameFirst,
-      quantity: itemQuantityFirst,
-      weight: itemWeightFirst,
+      quantity: parseInt(itemQuantityFirst),
+      weight: parseFloat(itemWeightFirst),
     };
-    setItems([...items, newItem]);
+    const updatedItems = [...items];
+    const existingIndex = updatedItems.findIndex(
+      (item) => item.name === itemNameFirst
+    );
+    if (existingIndex !== -1) {
+      updatedItems[existingIndex].quantity += newItem.quantity;
+    } else {
+      updatedItems.push(newItem);
+    }
+    setItems(updatedItems);
     setItemNameFirst('');
     setItemQuantityFirst('');
     setItemWeightFirst('');
@@ -32,10 +42,19 @@ function CadastroCesta() {
   const handleAddItemSecond = () => {
     const newItem = {
       name: itemNameSecond,
-      quantity: itemQuantitySecond,
-      weight: itemWeightSecond,
+      quantity: parseInt(itemQuantitySecond),
+      weight: parseFloat(itemWeightSecond),
     };
-    setDesiredItems([...desiredItems, newItem]);
+    const updatedDesiredItems = [...desiredItems];
+    const existingIndex = updatedDesiredItems.findIndex(
+      (item) => item.name === itemNameSecond
+    );
+    if (existingIndex !== -1) {
+      updatedDesiredItems[existingIndex].quantity += newItem.quantity;
+    } else {
+      updatedDesiredItems.push(newItem);
+    }
+    setDesiredItems(updatedDesiredItems);
     setItemNameSecond('');
     setItemQuantitySecond('');
     setItemWeightSecond('');
@@ -56,13 +75,14 @@ function CadastroCesta() {
     if (totalCestas === Infinity) {
       setBasketsMade(0);
       setRemainingItems([]);
-      alert('Não é possível montar nenhuma cesta com os itens fornecidos.');
+      setMissingItems(desiredItems);
       return;
     }
 
     setBasketsMade(totalCestas);
 
     const remaining = [];
+    const missing = [];
     items.forEach((item) => {
       const desiredItem = desiredItems.find(
         (desired) => desired.name === item.name
@@ -72,20 +92,17 @@ function CadastroCesta() {
           item.quantity - desiredItem.quantity * totalCestas;
         if (remainingQuantity > 0) {
           remaining.push({ ...item, remainingQuantity });
+        } else if (remainingQuantity < 0) {
+          missing.push({
+            name: item.name,
+            quantity: Math.abs(remainingQuantity),
+          });
         }
       }
     });
 
-    if (remaining.length === 0) {
-      setRemainingItems([]);
-      return;
-    }
-
-    const remainingText = remaining
-      .map((item) => `${item.remainingQuantity} ${item.name}(s)`)
-      .join(', ');
-    alert(`Faltam ${remainingText} para a próxima cesta.`);
     setRemainingItems(remaining);
+    setMissingItems(missing);
   };
 
   const downloadCSV = () => {
@@ -108,7 +125,11 @@ function CadastroCesta() {
       const lines = text.split('\n').slice(1);
       const newItems = lines.map((line) => {
         const [name, quantity, weight] = line.split(',');
-        return { name, quantity, weight };
+        return {
+          name,
+          quantity: parseInt(quantity),
+          weight: parseFloat(weight),
+        };
       });
       setItems(newItems);
     };
@@ -123,7 +144,11 @@ function CadastroCesta() {
       const lines = text.split('\n').slice(1);
       const newItems = lines.map((line) => {
         const [name, quantity, weight] = line.split(',');
-        return { name, quantity, weight };
+        return {
+          name,
+          quantity: parseInt(quantity),
+          weight: parseFloat(weight),
+        };
       });
       setDesiredItems(newItems);
     };
@@ -140,6 +165,31 @@ function CadastroCesta() {
       updatedDesiredItems.splice(index, 1);
       setDesiredItems(updatedDesiredItems);
     }
+  };
+
+  const handleClearCalculation = () => {
+    setBasketsMade(0);
+    setRemainingItems([]);
+    setMissingItems([]);
+  };
+
+  const handleMissingItems = () => {
+    let missing = [];
+    desiredItems.forEach((desiredItem) => {
+      const itemInList = items.find((item) => item.name === desiredItem.name);
+      if (!itemInList) {
+        missing.push(desiredItem);
+      } else {
+        const requiredQuantity = desiredItem.quantity * basketsMade;
+        if (itemInList.quantity < requiredQuantity) {
+          missing.push({
+            name: itemInList.name,
+            quantity: requiredQuantity - itemInList.quantity,
+          });
+        }
+      }
+    });
+    setMissingItems(missing);
   };
 
   return (
@@ -165,8 +215,6 @@ function CadastroCesta() {
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
-              <th>Peso</th>
-              <th>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -206,8 +254,6 @@ function CadastroCesta() {
             <tr>
               <th>Nome</th>
               <th>Quantidade</th>
-              <th>Peso</th>
-              <th>Ação</th>
             </tr>
           </thead>
           <tbody>
@@ -235,9 +281,23 @@ function CadastroCesta() {
             {item.remainingQuantity} {item.name}(s) excedente(s)
           </p>
         ))}
+        {missingItems.length > 0 && (
+          <div>
+            <h4>Itens Faltantes para Montar Nova Cesta:</h4>
+            <ul>
+              {missingItems.map((item, index) => (
+                <li key={index}>
+                  {item.name}: {item.quantity} unidade(s)
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
       <button onClick={handleCreateCestas}>Calcular Cestas</button>
       <button onClick={downloadCSV}>Baixar Itens em CSV</button>
+      <button onClick={handleMissingItems}>Ver Itens Faltantes</button>
+      <button onClick={handleClearCalculation}>Limpar Cálculo</button>
     </div>
   );
 }
