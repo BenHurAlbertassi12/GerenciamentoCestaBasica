@@ -5,8 +5,8 @@ import CadastroCesta from './itens/cadastroCesta/cadastroCesta';
 
 function App() {
   // Define o estado para controlar a visibilidade dos componentes
-  const [mostrarBeneficiarios, setMostrarBeneficiarios] = useState(true);
-  const [mostrarCadastroItens, setMostrarCadastroItens] = useState(true);
+  const [mostrarBeneficiarios, setMostrarBeneficiarios] = useState(false);
+  const [mostrarCadastroItens, setMostrarCadastroItens] = useState(false);
 
   // Função para alternar a visibilidade do cadastro de beneficiários
   const alternarVisibilidadeBeneficiarios = () => {
@@ -27,14 +27,14 @@ function App() {
       <section>
         
         <button onClick={alternarVisibilidadeBeneficiarios} className='clarear_titulo'>
-          {mostrarBeneficiarios ? 'Ocultar Cadastro Beneficiários' : 'Mostrar Cadastro Beneficiários'}
+          {mostrarBeneficiarios ? 'Cadastro Beneficiários' : 'Cadastro Beneficiários'}
         </button>
 
         {mostrarBeneficiarios && <CadastroPessoas />}
 
 
         <button onClick={alternarVisibilidadeCadastroItens}>
-          {mostrarCadastroItens ? 'Ocultar Cadastro Itens' : 'Mostrar Cadastro Itens'}
+          {mostrarCadastroItens ? 'Cadastro Itens' : 'Cadastro Itens'}
         </button>
 
         {mostrarCadastroItens && <CadastroCesta />}

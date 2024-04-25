@@ -6,8 +6,8 @@ function CadastroCesta() {
   const [desiredItems, setDesiredItems] = useState([]);
   const [basketsMade, setBasketsMade] = useState(0);
 
-  const [showItemsTable, setShowItemsTable] = useState(true);
-  const [showDesiredItemsTable, setShowDesiredItemsTable] = useState(true);
+  const [showItemsTable, setShowItemsTable] = useState(false);
+  const [showDesiredItemsTable, setShowDesiredItemsTable] = useState(false);
 
   const [itemNameFirst, setItemNameFirst] = useState('');
   const [itemQuantityFirst, setItemQuantityFirst] = useState('');
