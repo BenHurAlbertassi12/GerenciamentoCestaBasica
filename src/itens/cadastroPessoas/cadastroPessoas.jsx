@@ -84,6 +84,7 @@ function CadastroPessoas() {
 
   return (
     <div>
+      <h2 className='clarear_titulo'>Beneficiarios</h2>
       <div className='distancia'>
         <input
           type='file'
