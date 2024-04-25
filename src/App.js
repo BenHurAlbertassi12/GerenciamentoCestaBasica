@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-// import CadastroPessoas from './itens/cadastroPessoas/cadastroPessoas';
+import CadastroPessoas from './itens/cadastroPessoas/cadastroPessoas';
 import CadastroCesta from './itens/cadastroCesta/cadastroCesta';
 
 
@@ -14,7 +14,7 @@ function App() {
       <section>
       
           <h3>Cadastro Beneficiários</h3>
-          {/* <CadastroPessoas /> */}
+          <CadastroPessoas />
         
 
       
