@@ -81,7 +81,7 @@ function CadastroCesta() {
   return (
     <div>
       <section>
-        <h4 className='clarear_titulo'>Lista de Itens da Cesta Básica</h4>
+        <h2 className='clarear_titulo'>Lista de Itens da Cesta Básica</h2>
         <button
           onClick={() => setShowDesiredItemsTable(!showDesiredItemsTable)}>
           {showDesiredItemsTable ? 'Esconder' : 'Mostrar'} Tabela de Lista de
