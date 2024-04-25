@@ -26,7 +26,7 @@ function App() {
       <p className='pe'>Este aplicativo permite que você gerencie os itens da sua cesta básica e cadastre as pessoas que receberão as cestas.</p>
       <section>
         
-        <button onClick={alternarVisibilidadeBeneficiarios} className='clarear_titulo'>
+        <button onClick={alternarVisibilidadeBeneficiarios}>
           {mostrarBeneficiarios ? 'Cadastro Beneficiários' : 'Cadastro Beneficiários'}
         </button>
 
