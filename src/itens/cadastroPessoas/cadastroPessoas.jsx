@@ -135,7 +135,7 @@ function CadastroPessoas() {
             type='tel'
             id='telefone'
             name='telefone'
-            placeholder='Digite o telefone'
+            placeholder='02412345678'
             required
             onChange={(e) => {
               const telefone = e.target.value.replace(/\D/g, '');
@@ -177,7 +177,7 @@ function CadastroPessoas() {
       </form>
 
       <div>
-        <h2>Pessoas Cadastradas</h2>
+        <h2 className='clarear_titulo'>Pessoas Cadastradas</h2>
         <button onClick={downloadCSV}>Baixar CSV</button>
 
         <table className='mid_table'>
