@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+### Gerenciamento de Cesta Básica
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este projeto é uma aplicação desenvolvida em React.js para gerenciar as pessoas beneficiárias e os itens necessários para compor cestas básicas. Com este aplicativo, os usuários podem cadastrar beneficiários, registrar informações como nome, idade, quantidade de filhos, telefone e estado civil, além de gerenciar os itens necessários para compor as cestas básicas, como alimentos e produtos de higiene.
 
-## Available Scripts
+### Funcionalidades Principais
 
-In the project directory, you can run:
+- **Cadastro de Pessoas Beneficiárias:** Permite o registro de informações detalhadas sobre os beneficiários, como nome completo, idade, quantidade de filhos, telefone e estado civil. Os usuários também têm a opção de importar dados de um arquivo CSV e visualizar uma lista das pessoas cadastradas.
 
-### `npm start`
+- **Cadastro de Itens da Cesta Básica:** Possibilita adicionar e gerenciar os itens necessários para compor as cestas básicas, como alimentos não perecíveis, produtos de limpeza e higiene pessoal. Os usuários podem especificar o nome e a quantidade de cada item, além de importar dados de um arquivo CSV.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Geração de Relatório:** Calcula automaticamente a quantidade de cestas básicas que podem ser montadas com base nos itens disponíveis e nas quantidades desejadas. Isso permite uma gestão eficiente dos recursos e facilita o planejamento da distribuição.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Como Utilizar
 
-### `npm test`
+1. **Instalação:**
+   - Clone este repositório em sua máquina local usando o comando:
+     ```
+     git clone https://github.com/seu-usuario/gerenciamento-cesta-basica.git
+     ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Instalar Dependências:**
+   - Navegue até o diretório do projeto e instale as dependências usando npm ou yarn:
+     ```
+     cd gerenciamento-cesta-basica
+     npm install
+     ```
 
-### `npm run build`
+3. **Executar o Aplicativo:**
+   - Após a instalação das dependências, execute o comando:
+     ```
+     npm start
+     ```
+   - O aplicativo será executado no modo de desenvolvimento e abrirá automaticamente uma nova aba do navegador padrão com o endereço `http://localhost:3000`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Uso da Aplicação:**
+   - Uma vez que o aplicativo esteja em execução, você poderá alternar entre os cadastros de beneficiários e itens da cesta básica clicando nos botões correspondentes na interface.
+   - Utilize os formulários para adicionar novas informações de beneficiários e itens da cesta básica.
+   - Importe dados de arquivos CSV para facilitar o processo de cadastro.
+   - Visualize e gerencie os dados cadastrados por meio das tabelas disponíveis na aplicação.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Tecnologias Utilizadas
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- React.js
+- JavaScript (ES6+)
+- HTML5
+- CSS3

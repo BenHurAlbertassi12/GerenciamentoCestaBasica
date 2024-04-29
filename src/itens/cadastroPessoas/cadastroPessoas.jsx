@@ -6,6 +6,7 @@ function CadastroPessoas() {
   const [pessoasCadastradas, setPessoasCadastradas] = useState([]);
   const [nomeValido, setNomeValido] = useState(true);
   const [telefoneValido, setTelefoneValido] = useState(true);
+  
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -15,8 +16,8 @@ function CadastroPessoas() {
       const csv = e.target.result;
       const lines = csv.split('\n').slice(1); 
       const newPeople = lines.map((line) => {
-        const [nome, idade, filhos, telefone, nomeConjuge] = line.split(',');
-        return { nome, idade, filhos, telefone, nomeConjuge };
+        const [nome, idade, filhos, telefone, nomeConjuge, rendaTotal] = line.split(',');
+        return { nome, idade, filhos, telefone, nomeConjuge, rendaTotal };
       });
       setPessoasCadastradas([...pessoasCadastradas, ...newPeople]);
     };
@@ -44,8 +45,10 @@ function CadastroPessoas() {
     const idade = event.target.idade.value;
     const filhos = event.target.filhos.value;
     const nomeConjuge = casado ? event.target.nomeConjuge.value : '';
+    const rendaTotal = event.target.rendaTotal.value;
 
-    const pessoa = { nome, idade, filhos, telefone, nomeConjuge };
+
+    const pessoa = { nome, idade, filhos, telefone, nomeConjuge, rendaTotal };
     setPessoasCadastradas([...pessoasCadastradas, pessoa]);
     event.target.reset();
   };
@@ -172,6 +175,14 @@ function CadastroPessoas() {
             placeholder='Digite o nome do cônjuge'
             disabled={!casado}
           />
+
+          <label htmlFor='rendaTotal'>Renda:</label>
+          <input
+            type='number'
+            id='rendaTotal'
+            name='rendaTotal'
+            placeholder='Digite a Renda'
+          />
           <br />
           <button type='submit'>Cadastrar Pessoa</button>
         </div>
@@ -189,6 +200,7 @@ function CadastroPessoas() {
               <th>Filhos</th>
               <th>Telefone</th>
               <th>Cônjuge</th>
+              <th>Renda Total</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -200,6 +212,7 @@ function CadastroPessoas() {
                 <td>{pessoa.filhos}</td>
                 <td>{pessoa.telefone}</td>
                 <td>{pessoa.nomeConjuge}</td>
+                <td>{pessoa.rendaTotal}</td>
                 <td>
                   <button onClick={() => handleRemove(index)}>Remover</button>
                 </td>
